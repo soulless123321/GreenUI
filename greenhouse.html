@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Теплица — интерфейс</title>
+    <style>
+        /* ---------- CSS-переменные ---------- */
+        :root {
+            --app-width: 320px;
+            --app-height: 505px;
+        }
+
+        /* ---------- Сброс и центровка ---------- */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c2c2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        /* ---------- Главный контейнер приложения ---------- */
+        .app-container {
+            width: var(--app-width);
+            height: var(--app-height);
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;       /* всё, что выходит за границы, обрезается */
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        /* ---------- Область контента (вкладок) ---------- */
+        .content-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ---------- Вкладка "Главная" (фото теплицы) ---------- */
+        .scene {
+            width: 100%;
+            height: 100%;
+            background-image: url('greenhouse.jpg'); /* замените на имя вашего файла */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* ---------- Горячие точки (отладка) ---------- */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 255, 0, 0.25);
+            border: 2px dashed #ff6600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* ---------- Нижняя плавающая панель ---------- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            height: 40px;                    /* было 60px */
+            background: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 29px;             /* можно чуть уменьшить скругление */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 9px;                 /* было 10px */
+            cursor: pointer;
+            transition: all 0.2s;
+            border-top: 3px solid transparent;
+            box-sizing: border-box;
+        }
+        .nav-btn span.icon {
+            font-size: 18px;                /* было 20px */
+            margin-bottom: 1px;             /* было 2px */
+            filter: drop-shadow(0 1px 3px black);
+        }
+        .nav-btn.active {
+            color: #4CAF50;
+            border-top-color: #4CAF50;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* ========== БУРГЕР-МЕНЮ (ПРАВАЯ СТОРОНА) ========== */
+        /* Кнопка-бургер теперь в правом верхнем углу */
+        /* ---------- Кнопка-бургер ---------- */
+        .burger-btn {
+            position: absolute;
+            top: 5px;                      /* было 16px */
+            right: 16px;
+            /* остальное без изменений */
+            z-index: 20;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: background 0.2s;
+        }
+        .burger-btn:hover {
+            background: rgba(0,0,0,0.7);
+        }
+
+        /* Боковая панель теперь выезжает справа */
+        .side-panel {
+            position: absolute;
+            top: 0;
+            right: -280px;              /* спрятана за правым краем */
+            width: 250px;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(255,255,255,0.1);  /* рамка слева, т.к. панель справа */
+            z-index: 25;
+            transition: right 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .side-panel.open {
+            right: 0;
+        }
+        .side-panel h4 {
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-weight: 500;
+            font-size: 18px;
+            color: #ddd;
+        }
+        .side-panel label {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .side-panel input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 6px;
+            color: white;
+            outline: none;
+        }
+        .side-panel .close-btn {
+            align-self: flex-end;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- ========== Кнопка-бургер (теперь справа) ========== -->
+        <div class="burger-btn" id="burgerBtn">☰</div>
+
+        <!-- ========== Боковая панель настроек (выезжает справа) ========== -->
+        <div class="side-panel" id="sidePanel">
+            <button class="close-btn" id="closePanelBtn">&times;</button>
+            <h4>Настройки экрана</h4>
+            <label>Единицы температуры</label>
+            <input type="text" placeholder="°C">
+            <label>Частота обновления</label>
+            <input type="text" placeholder="5 сек">
+            <label>Тема</label>
+            <input type="text" placeholder="Светлая">
+        </div>
+
+        <!-- ========== Область контента (вкладки) ========== -->
+        <div class="content-area">
+            <!-- Главная -->
+            <div id="tab-home" class="tab-content active">
+                <div class="scene">
+                    <!-- Горячие точки (пока видны) -->
+                    <div id="tempSensor" class="hotspot" style="left: 15%; top: 25%; width: 60px; height: 60px;">🌡️</div>
+                    <div id="pumpControl" class="hotspot" style="left: 70%; top: 60%; width: 70px; height: 70px;">💧</div>
+                </div>
+            </div>
+
+            <!-- Управление -->
+            <div id="tab-control" class="tab-content">
+                <div style="padding: 20px; color: #333;">
+                    <h3>Управление</h3>
+                    <p>Здесь будут кнопки управления насосом, светом и пр.</p>
+                </div>
+            </div>
+
+            <!-- Графики -->
+            <div id="tab-charts" class="tab-content">
+                <div style="padding: 20px; color: #333;">
+                    <h3>Графики</h3>
+                    <p>Графики температуры и влажности.</p>
+                </div>
+            </div>
+
+            <!-- Настройки -->
+            <div id="tab-settings" class="tab-content">
+                <div style="padding: 20px; color: #333;">
+                    <h3>Настройки</h3>
+                    <p>Общие настройки теплицы.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== Нижняя плавающая панель ========== -->
+        <div class="bottom-nav">
+            <div class="nav-btn active" data-tab="home">
+                <span class="icon">🏠</span>
+                <span>Главная</span>
+            </div>
+            <div class="nav-btn" data-tab="control">
+                <span class="icon">🎛️</span>
+                <span>Управление</span>
+            </div>
+            <div class="nav-btn" data-tab="charts">
+                <span class="icon">📊</span>
+                <span>Графики</span>
+            </div>
+            <div class="nav-btn" data-tab="settings">
+                <span class="icon">⚙️</span>
+                <span>Настройки</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Временный JavaScript для демонстрации навигации и бургера -->
+    <script>
+        (function() {
+            // --- Переключение вкладок ---
+            var navButtons = document.querySelectorAll('.nav-btn');
+            var tabs = document.querySelectorAll('.tab-content');
+
+            navButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    navButtons.forEach(function(b) { b.classList.remove('active'); });
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+
+                    var targetId = this.getAttribute('data-tab');
+                    var targetTab = document.getElementById('tab-' + targetId);
+                    if (targetTab) {
+                        targetTab.classList.add('active');
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // --- Бургер-меню (правая сторона) ---
+            var burgerBtn = document.getElementById('burgerBtn');
+            var sidePanel = document.getElementById('sidePanel');
+            var closePanelBtn = document.getElementById('closePanelBtn');
+
+            burgerBtn.addEventListener('click', function() {
+                sidePanel.classList.add('open');
+            });
+            closePanelBtn.addEventListener('click', function() {
+                sidePanel.classList.remove('open');
+            });
+            // Закрытие при клике вне панели
+            document.addEventListener('click', function(e) {
+                if (!sidePanel.contains(e.target) && e.target !== burgerBtn) {
+                    sidePanel.classList.remove('open');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
