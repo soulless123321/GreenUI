@@ -319,4 +319,207 @@
         })();
     </script>
 </body>
-</html>
+</html><style>
+    /* ---------- CSS-переменные ---------- */
+    :root {
+        --app-width: 320px;   /* базовая ширина макета */
+        --app-height: 505px;  /* базовая высота макета */
+    }
+
+    /* ---------- Сброс и центровка ---------- */
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #2c2c2e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* ---------- Главный контейнер приложения ---------- */
+    .app-container {
+        /* Занимает всю доступную ширину, но не больше базовой */
+        width: 100%;
+        max-width: var(--app-width);
+        /* Высота рассчитывается автоматически, сохраняя пропорции */
+        height: auto;
+        aspect-ratio: 320 / 505;
+        /* На маленьких экранах высота не должна превышать видимую область */
+        max-height: 100vh;
+        
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;       /* всё, что выходит за границы, обрезается */
+        box-shadow: 0 0 30px rgba(0,0,0,0.7);
+        position: relative;
+    }
+
+    /* ---------- Область контента (вкладок) ---------- */
+    .content-area {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .tab-content {
+        display: none;
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+    }
+    .tab-content.active {
+        display: block;
+    }
+
+    /* ---------- Вкладка "Главная" (фото теплицы) ---------- */
+    .scene {
+        width: 100%;
+        height: 100%;
+        background-image: url('greenhouse.svg');  /* ваша SVG-картинка */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+    /* ---------- Горячие точки (отладка) ---------- */
+    .hotspot {
+        position: absolute;
+        background: rgba(255, 255, 0, 0.25);
+        border: 2px dashed #ff6600;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        text-shadow: 1px 1px 2px black;
+    }
+
+    /* ========== НИЖНЯЯ ПЛАВАЮЩАЯ ПАНЕЛЬ ========== */
+    .bottom-nav {
+        position: absolute;
+        bottom: 16px;                 /* отступ от нижнего края */
+        left: 16px;                   /* отступ слева */
+        right: 16px;                  /* отступ справа */
+        height: 50px;
+        background: rgba(30, 30, 30, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 10;
+    }
+
+    .nav-btn {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        font-size: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-top: 3px solid transparent;
+        box-sizing: border-box;
+    }
+    .nav-btn span.icon {
+        font-size: 18px;
+        margin-bottom: 1px;
+        filter: drop-shadow(0 1px 3px black);
+    }
+    .nav-btn.active {
+        color: #4CAF50;
+        border-top-color: #4CAF50;
+        background: rgba(255,255,255,0.05);
+    }
+
+    /* ========== БУРГЕР-МЕНЮ (ПРАВАЯ СТОРОНА) ========== */
+    .burger-btn {
+        position: absolute;
+        top: 10px;
+        right: 16px;
+        z-index: 20;
+        width: 40px;
+        height: 40px;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: background 0.2s;
+    }
+    .burger-btn:hover {
+        background: rgba(0,0,0,0.7);
+    }
+
+    /* Боковая панель теперь выезжает справа */
+    .side-panel {
+        position: absolute;
+        top: 0;
+        right: -280px;
+        width: 250px;
+        height: 100%;
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-left: 1px solid rgba(255,255,255,0.1);
+        z-index: 25;
+        transition: right 0.3s ease;
+        padding: 20px;
+        box-sizing: border-box;
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
+    .side-panel.open {
+        right: 0;
+    }
+    .side-panel h4 {
+        margin-top: 0;
+        margin-bottom: 24px;
+        font-weight: 500;
+        font-size: 18px;
+        color: #ddd;
+    }
+    .side-panel label {
+        font-size: 14px;
+        color: #aaa;
+        margin-bottom: 8px;
+    }
+    .side-panel input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        background: #333;
+        border: 1px solid #555;
+        border-radius: 6px;
+        color: white;
+        outline: none;
+    }
+    .side-panel .close-btn {
+        align-self: flex-end;
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+</style>
