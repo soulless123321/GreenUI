@@ -79,7 +79,7 @@
             z-index: 15;
         }
         .ctrl-btn {
-            width: 48px; height: 48px;
+            width: 36px; height: 36px;          /* было 48×48 */
             border-radius: 50%;
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -96,7 +96,7 @@
             background: rgba(255,255,255,0.2);
         }
         .ctrl-btn img {
-            width: 26px; height: 26px;
+            width: 20px; height: 20px;          /* было 26×26 */
             filter: drop-shadow(0 1px 2px black);
         }
 
@@ -107,11 +107,12 @@
             left: 12px;
             right: 12px;
             height: var(--nav-height);
-            background: rgba(10, 10, 10, 0.45);
+            background: transparent;                /* полностью прозрачный фон */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.5);   /* выраженная светлая граница */
             border-radius: 34px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -131,8 +132,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            border-radius: 24px;
-            margin: 0 2px;
+            border-radius: 20px;          /* чуть уменьшим для симметрии */
+            margin: 6px 2px;              /* отступы внутри панели */
             position: relative;
         }
         .nav-btn img {
@@ -148,6 +149,8 @@
             font-weight: 600;
             box-shadow: 0 0 14px rgba(76, 175, 80, 0.5);
             backdrop-filter: blur(8px);
+            margin: 6px 2px;             /* сохраняем те же отступы, чтобы не дёргалось */
+            border-radius: 20px;
         }
         .nav-btn.active img {
             opacity: 1;
