@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Теплица — интерфейс</title>
+    <!-- Подключение шрифта -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --app-width: 320px;
@@ -11,18 +15,21 @@
             --glass-bg: rgba(20, 20, 20, 0.55);
             --glass-blur: blur(16px);
             --active-green: rgba(76, 175, 80, 0.4);
-            --nav-height: 62px;
+            --nav-height: 36px;
         }
 
         /* ---------- Сброс и центровка ---------- */
-        html, body {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             background: #2c2c2e;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: 'Montserrat Alternates', sans-serif;
         }
 
         .app-container {
@@ -31,23 +38,32 @@
             background: #fff;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
             position: relative;
         }
 
         .content-area {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             position: relative;
         }
 
         .tab-content {
-            display: none; position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
-        .tab-content.active { display: block; }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .scene {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             background-image: url('greenhouse.svg');
             background-size: cover;
             background-position: center;
@@ -62,42 +78,48 @@
             border: 2px dashed #ff6600;
             border-radius: 8px;
             cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
             text-shadow: 1px 1px 2px black;
         }
 
         /* ========== КНОПКИ УПРАВЛЕНИЯ (над панелью) ========== */
         .control-buttons {
             position: absolute;
-            bottom: 84px;
+            bottom: 70px;
             left: 16px;
             right: 16px;
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 28px;
             z-index: 15;
         }
+
         .ctrl-btn {
-            width: 36px; height: 36px;          /* было 48×48 */
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: transparent;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: transform 0.1s;
         }
+
         .ctrl-btn:active {
             transform: scale(0.92);
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
+
         .ctrl-btn img {
-            width: 20px; height: 20px;          /* было 26×26 */
-            filter: drop-shadow(0 1px 2px black);
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
         }
 
         /* ========== НИЖНЯЯ ПЛАВАЮЩАЯ ПАНЕЛЬ ========== */
@@ -107,16 +129,16 @@
             left: 12px;
             right: 12px;
             height: var(--nav-height);
-            background: transparent;                /* полностью прозрачный фон */
+            background: transparent;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.5);   /* выраженная светлая граница */
-            border-radius: 34px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 10px;
+            padding: 0 6px;
             z-index: 10;
         }
 
@@ -128,117 +150,223 @@
             align-items: center;
             justify-content: center;
             color: #ddd;
-            font-size: 10px;
+            font-size: 7px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            border-radius: 20px;          /* чуть уменьшим для симметрии */
-            margin: 6px 2px;              /* отступы внутри панели */
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            margin: 3px 1px;
             position: relative;
         }
+
         .nav-btn img {
-            width: 24px; height: 24px;
-            margin-bottom: 3px;
+            width: 15px;
+            height: 15px;
+            margin-bottom: 1px;
             opacity: 0.85;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
         }
 
         .nav-btn.active {
             background: var(--active-green);
             color: #fff;
             font-weight: 600;
-            box-shadow: 0 0 14px rgba(76, 175, 80, 0.5);
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
             backdrop-filter: blur(8px);
-            margin: 6px 2px;             /* сохраняем те же отступы, чтобы не дёргалось */
-            border-radius: 20px;
-        }
-        .nav-btn.active img {
-            opacity: 1;
-            filter: drop-shadow(0 0 4px rgba(76,175,80,0.7));
         }
 
-        /* ========== БУРГЕР-МЕНЮ (правая сторона) ========== */
+        .nav-btn.active img {
+            opacity: 1;
+            filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.7));
+        }
+
+        .nav-btn:first-child {
+            margin-left: 0;
+        }
+
+        .nav-btn:last-child {
+            margin-right: 0;
+        }
+
+        /* ========== БУРГЕР-МЕНЮ (правая сторона, без фона) ========== */
         .burger-btn {
             position: absolute;
-            top: 5px; right: 8px;
+            top: 10px;
+            right: 16px;
             z-index: 20;
-            width: 40px; height: 40px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 22px;
+            /* <-- белый цвет всегда */
+            font-size: 28px;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: background 0.2s;
+            transition: color 0.2s;
         }
-        .burger-btn:hover { background: rgba(0,0,0,0.7); }
 
+        .burger-btn:hover {
+            color: #ddd;
+            /* <-- лёгкое изменение при наведении (опционально) */
+        }
+
+        /* Боковая светлая панель */
         .side-panel {
             position: absolute;
-            top: 0; right: -280px;
-            width: 250px; height: 100%;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-left: 1px solid rgba(255,255,255,0.1);
+            top: 0;
+            right: -280px;
+            width: 250px;
+            height: 100%;
+            background: #fff;
+            color: #000;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
             z-index: 25;
             transition: right 0.3s ease;
             padding: 20px;
             box-sizing: border-box;
-            color: white;
             display: flex;
             flex-direction: column;
         }
-        .side-panel.open { right: 0; }
-        .side-panel h4 {
-            margin-top: 0; margin-bottom: 24px;
-            font-weight: 500; font-size: 18px;
-            color: #ddd;
+
+        .side-panel.open {
+            right: 0;
         }
-        .side-panel label {
-            font-size: 14px; color: #aaa;
-            margin-bottom: 8px;
-        }
-        .side-panel input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
-            outline: none;
-        }
-        .side-panel .close-btn {
+
+        .close-btn {
             align-self: flex-end;
-            background: transparent; border: none;
-            color: white; font-size: 24px;
+            background: transparent;
+            border: none;
+            color: #000;
+            font-size: 24px;
             cursor: pointer;
             margin-bottom: 20px;
         }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin: 16px 0 12px;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #aaa;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #4CAF50;
+            margin: 20px 0;
+            opacity: 0.6;
+        }
+
+        .notification-area {
+            font-size: 12px;
+            color: #333;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 60px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .notification-area p {
+            margin: 0;
+        }
     </style>
 </head>
+
 <body>
     <div class="app-container">
 
-        <!-- Кнопка-бургер -->
+        <!-- Бургер-кнопка (без фона, только значок) -->
         <div class="burger-btn" id="burgerBtn">☰</div>
 
         <!-- Боковая панель настроек -->
         <div class="side-panel" id="sidePanel">
             <button class="close-btn" id="closePanelBtn">&times;</button>
-            <h4>Настройки экрана</h4>
-            <label>Единицы температуры</label>
-            <input type="text" placeholder="°C">
-            <label>Частота обновления</label>
-            <input type="text" placeholder="5 сек">
-            <label>Тема</label>
-            <input type="text" placeholder="Светлая">
+
+            <div class="panel-title">Подключения</div>
+
+            <div class="toggle-container">
+                <span class="toggle-label">Wi-Fi</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="wifiToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-container">
+                <span class="toggle-label">Bluetooth</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="btToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="panel-title">Уведомления</div>
+            <div class="notification-area" id="notificationArea">
+                <p>Нет новых уведомлений</p>
+            </div>
         </div>
 
         <!-- Область контента (вкладки) -->
@@ -273,6 +401,14 @@
                     <p>Показания всех датчиков.</p>
                 </div>
             </div>
+
+            <!-- Управление -->
+            <div id="tab-control" class="tab-content">
+                <div style="padding: 20px; color: #333;">
+                    <h3>Управление</h3>
+                    <p>Ручное управление системами.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Три кнопки управления -->
@@ -282,7 +418,7 @@
             <div class="ctrl-btn" id="warningBtn"><img src="icons/warning.png" alt="Warning"></div>
         </div>
 
-        <!-- Нижняя панель навигации -->
+        <!-- Нижняя панель навигации (5 кнопок) -->
         <div class="bottom-nav">
             <div class="nav-btn active" data-tab="home">
                 <img src="icons/home.svg" alt="Главная"><span>Главная</span>
@@ -296,19 +432,22 @@
             <div class="nav-btn" data-tab="sensors">
                 <img src="icons/sensors.svg" alt="Датчики"><span>Датчики</span>
             </div>
+            <div class="nav-btn" data-tab="control">
+                <img src="icons/control.svg" alt="Управление"><span>Управление</span>
+            </div>
         </div>
     </div>
 
     <!-- Временный JavaScript для переключения вкладок и бургера -->
     <script>
-        (function() {
+        (function () {
             var navButtons = document.querySelectorAll('.nav-btn');
             var tabs = document.querySelectorAll('.tab-content');
 
-            navButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    navButtons.forEach(function(b) { b.classList.remove('active'); });
-                    tabs.forEach(function(t) { t.classList.remove('active'); });
+            navButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    navButtons.forEach(function (b) { b.classList.remove('active'); });
+                    tabs.forEach(function (t) { t.classList.remove('active'); });
 
                     var targetId = this.getAttribute('data-tab');
                     var targetTab = document.getElementById('tab-' + targetId);
@@ -323,9 +462,9 @@
             var sidePanel = document.getElementById('sidePanel');
             var closePanelBtn = document.getElementById('closePanelBtn');
 
-            burgerBtn.addEventListener('click', function() { sidePanel.classList.add('open'); });
-            closePanelBtn.addEventListener('click', function() { sidePanel.classList.remove('open'); });
-            document.addEventListener('click', function(e) {
+            burgerBtn.addEventListener('click', function () { sidePanel.classList.add('open'); });
+            closePanelBtn.addEventListener('click', function () { sidePanel.classList.remove('open'); });
+            document.addEventListener('click', function (e) {
                 if (!sidePanel.contains(e.target) && e.target !== burgerBtn) {
                     sidePanel.classList.remove('open');
                 }
@@ -333,4 +472,5 @@
         })();
     </script>
 </body>
+
 </html>
