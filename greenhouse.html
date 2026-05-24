@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Теплица — интерфейс</title>
-    <!-- Подключение шрифта -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --app-width: 320px;
-            --app-height: 505px;
+            --app-height: 560px;
             --glass-bg: rgba(20, 20, 20, 0.55);
             --glass-blur: blur(16px);
             --active-green: rgba(76, 175, 80, 0.4);
-            --nav-height: 36px;
+            --nav-height: 44px;
+            --input-border: #00CE26;
+            --system-border: #01BE01;
+            --divider-color: #D9D9D9;
         }
 
-        /* ---------- Сброс и центровка ---------- */
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background: #2c2c2e;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Montserrat Alternates', sans-serif;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .app-container {
@@ -38,32 +44,25 @@
             background: #fff;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
             position: relative;
         }
 
         .content-area {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             position: relative;
         }
 
         .tab-content {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            display: none; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #ffffff;
         }
+        .tab-content.active { display: block; }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        .scene {
-            width: 100%;
-            height: 100%;
+        /* ---------- Главная сцена ---------- */
+        #tab-home .scene {
+            width: 100%; height: 100%;
             background-image: url('greenhouse.svg');
             background-size: cover;
             background-position: center;
@@ -71,22 +70,6 @@
             position: relative;
         }
 
-        /* ---------- Горячие точки (отладка) ---------- */
-        .hotspot {
-            position: absolute;
-            background: rgba(255, 255, 0, 0.25);
-            border: 2px dashed #ff6600;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            text-shadow: 1px 1px 2px black;
-        }
-
-        /* ========== КНОПКИ УПРАВЛЕНИЯ (над панелью) ========== */
         .control-buttons {
             position: absolute;
             bottom: 70px;
@@ -97,10 +80,8 @@
             gap: 28px;
             z-index: 15;
         }
-
         .ctrl-btn {
-            width: 52px;
-            height: 52px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             background: transparent;
             border: none;
@@ -110,19 +91,16 @@
             cursor: pointer;
             transition: transform 0.1s;
         }
-
         .ctrl-btn:active {
             transform: scale(0.92);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
         }
-
         .ctrl-btn img {
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+            width: 32px; height: 32px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
 
-        /* ========== НИЖНЯЯ ПЛАВАЮЩАЯ ПАНЕЛЬ ========== */
+        /* ---------- Нижняя панель (5 кнопок) ---------- */
         .bottom-nav {
             position: absolute;
             bottom: 14px;
@@ -133,15 +111,14 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border-radius: 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 6px;
+            padding: 0 8px;
             z-index: 10;
         }
-
         .nav-btn {
             flex: 1;
             height: 100%;
@@ -150,23 +127,20 @@
             align-items: center;
             justify-content: center;
             color: #ddd;
-            font-size: 7px;
+            font-size: 9px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 20px;
-            margin: 3px 1px;
+            margin: 4px 2px;
             position: relative;
         }
-
         .nav-btn img {
-            width: 15px;
-            height: 15px;
-            margin-bottom: 1px;
+            width: 18px; height: 18px;
+            margin-bottom: 2px;
             opacity: 0.85;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
         }
-
         .nav-btn.active {
             background: var(--active-green);
             color: #fff;
@@ -174,55 +148,46 @@
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
             backdrop-filter: blur(8px);
         }
-
         .nav-btn.active img {
             opacity: 1;
-            filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.7));
+            filter: drop-shadow(0 0 3px rgba(76,175,80,0.7));
         }
+        .nav-btn:first-child { margin-left: 0; }
+        .nav-btn:last-child  { margin-right: 0; }
 
-        .nav-btn:first-child {
-            margin-left: 0;
-        }
-
-        .nav-btn:last-child {
-            margin-right: 0;
-        }
-
-        /* ========== БУРГЕР-МЕНЮ (правая сторона, без фона) ========== */
+        /* ---------- Бургер ---------- */
         .burger-btn {
             position: absolute;
-            top: 10px;
-            right: 16px;
+            top: 10px; right: 16px;
             z-index: 20;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: transparent;
             border: none;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
-            /* <-- белый цвет всегда */
-            font-size: 28px;
+            gap: 5px;
             cursor: pointer;
-            transition: color 0.2s;
         }
-
-        .burger-btn:hover {
-            color: #ddd;
-            /* <-- лёгкое изменение при наведении (опционально) */
+        .burger-btn span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #888;
+            border-radius: 2px;
+            transition: background 0.2s;
         }
+        .burger-btn:hover span { background: #aaa; }
 
-        /* Боковая светлая панель */
+        /* ---------- Боковая панель ---------- */
         .side-panel {
             position: absolute;
-            top: 0;
-            right: -280px;
-            width: 250px;
-            height: 100%;
+            top: 0; right: -280px;
+            width: 250px; height: 100%;
             background: #fff;
             color: #000;
-            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            border-left: 1px solid rgba(0,0,0,0.1);
             z-index: 25;
             transition: right 0.3s ease;
             padding: 20px;
@@ -230,247 +195,836 @@
             display: flex;
             flex-direction: column;
         }
-
-        .side-panel.open {
-            right: 0;
-        }
-
+        .side-panel.open { right: 0; }
         .close-btn {
             align-self: flex-end;
-            background: transparent;
-            border: none;
-            color: #000;
-            font-size: 24px;
+            background: transparent; border: none;
+            color: #000; font-size: 24px;
             cursor: pointer;
             margin-bottom: 20px;
         }
-
         .panel-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #000;
+            font-size: 16px; font-weight: 600; color: #000;
             margin: 16px 0 12px;
         }
-
         .toggle-container {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .toggle-label { font-size: 14px; color: #333; }
+        .toggle-switch {
+            position: relative; display: inline-block;
+            width: 44px; height: 24px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #aaa; transition: 0.3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white; transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .divider {
+            height: 1px; background-color: #4CAF50;
+            margin: 20px 0; opacity: 0.6;
+        }
+        .notification-area {
+            font-size: 12px; color: #333;
+            background: rgba(0,0,0,0.03);
+            border-radius: 8px; padding: 10px;
+            min-height: 60px; max-height: 120px; overflow-y: auto;
+        }
+        .notification-area p { margin: 0; }
+
+        /* ---------- Страницы с полями (Аэро/Гидро/Управление) ---------- */
+        .aero-scene, .hydro-scene, .control-scene {
+            width: 100%; height: 100%;
+            background: #ffffff;
+            position: relative; overflow: hidden;
+        }
+        .aero-title, .hydro-title, .control-title {
+            position: absolute;
+            top: 12px; left: 16px;
+            font-size: 18px; font-weight: 600; color: #000;
+            z-index: 5;
+        }
+        .aero-bg, .hydro-bg, .control-bg {
+            position: absolute;
+            left: 0; top: 0;
+            width: 231px; height: 446px;
+            object-fit: cover; opacity: 0.25;
+            z-index: 1;
+        }
+
+        .section-divider {
+            position: absolute;
+            top: 42px;
+            left: 16px;
+            right: 16px;
+            height: 1px;
+            background: var(--divider-color);
+            z-index: 6;
+        }
+
+        .aero-inputs, .hydro-inputs, .control-inputs {
+            position: relative; z-index: 2;
+            padding: 60px 16px 0 16px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .aero-row, .hydro-row, .control-row {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .aero-row span, .hydro-row span, .control-row span {
+            font-size: 18px;
+            color: #333;
+        }
+        .aero-input, .hydro-input {
+            width: 120px; height: 24px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            padding: 0 8px;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .light-block {
+            display: flex; align-items: center;
+            width: 120px; height: 24px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .light-block button {
+            width: 42px; min-width: 42px; max-width: 42px;
+            height: 100%;
+            border: none;
+            font-size: 11px; font-weight: 600;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background 0.2s;
+            background: #ccc;
+        }
+        .light-block button.light-on { background: #4CAF50; }
+        .light-block button.light-off { background: #F44336; }
+        .light-block input {
+            width: 78px; min-width: 78px; max-width: 78px;
+            height: 100%;
+            border: none;
+            padding: 0 4px;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+            background: transparent;
+        }
+
+        /* Овальное окно со счётчиком (Аэро/Гидро) */
+        .launch-counter {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 40px;
+            background: #fff;
+            border: 2px solid #4CAF50;
+            border-radius: 20px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            z-index: 2;
+        }
+        .launch-icon {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 36px; height: 36px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .launch-icon img { width: 20px; height: 20px; }
+        .launch-label {
+            font-size: 16px;
+            color: #666;
+            margin-right: 6px;
+            white-space: nowrap;
+        }
+        .launch-value {
+            width: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            border: none;
+            outline: none;
+            background: transparent;
+            text-align: center;
+        }
+
+        /* ---------- Страница "Система" ---------- */
+        .system-scene {
+            width: 100%; height: 100%;
+            background: #ffffff;
+            position: relative; overflow-y: auto;
+            padding: 12px;
+            box-sizing: border-box;
+        }
+        .system-header {
+            display: flex;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .system-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .status-indicator {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: #4CAF50;
+            flex-shrink: 0;
+        }
+        .status-indicator.inactive {
+            background: #F44336;
+        }
+        .status-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .active-system {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: #000;
             margin-bottom: 12px;
         }
 
-        .toggle-label {
+        /* Овальный блок с датчиками */
+        .sensor-oval {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #f9f9f9;
+            border: 2px solid var(--system-border);
+            border-radius: 20px;
+            padding: 6px 8px;
+            margin-bottom: 10px;
+        }
+        .sensor-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+        .sensor-item img {
+            width: 16px; height: 16px;
+        }
+
+        /* Квадраты */
+        .square-boxes {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .square-box {
+            flex: 1;
+            background: #fff;
+            border: 2px solid var(--system-border);
+            border-radius: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .box-header img {
+            width: 16px; height: 16px;
+        }
+        .box-header span {
             font-size: 14px;
-            color: #333;
+            font-weight: 500;
+        }
+        .field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+        .field label {
+            font-size: 11px;
+            color: #555;
+        }
+        .field input {
+            width: 55px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 11px;
         }
 
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
+        /* Индикаторы */
+        .indicators-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
         }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #aaa;
-            transition: 0.3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
+        .indicator-circle {
+            width: 20px; height: 20px;
             border-radius: 50%;
+            background: #F44336;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .indicator-circle.green {
+            background: #4CAF50;
+        }
+        .indicator-square {
+            width: 20px; height: 20px;
+            background: #F44336;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .indicator-square.green {
+            background: #4CAF50;
         }
 
-        input:checked+.slider {
-            background-color: #4CAF50;
+        /* Блок восстановления */
+        .recovery-box {
+            position: relative;
+            border: 2px solid #FF9800;
+            border-radius: 14px;
+            padding: 14px 10px 8px;
+            text-align: center;
+            background: #fff;
+            margin-top: 20px;
         }
-
-        input:checked+.slider:before {
-            transform: translateX(20px);
+        .recovery-icon {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px; height: 32px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #FF9800;
         }
-
-        .divider {
-            height: 1px;
-            background-color: #4CAF50;
-            margin: 20px 0;
-            opacity: 0.6;
+        .recovery-icon img {
+            width: 16px; height: 16px;
         }
-
-        .notification-area {
+        .recovery-text p {
+            margin: 2px 0;
             font-size: 12px;
             color: #333;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 8px;
-            padding: 10px;
-            min-height: 60px;
-            max-height: 120px;
-            overflow-y: auto;
+        }
+        .recovery-text .dim {
+            color: #666;
         }
 
-        .notification-area p {
-            margin: 0;
+        /* ---------- Тумблеры (Управление) ---------- */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 20px;
+        }
+        .switch input {
+            opacity: 0; width: 0; height: 0;
+        }
+        .switch-slider {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid #00CE26;
+            border-radius: 10px;
+            background: transparent;
+            box-sizing: border-box;
+        }
+        .switch-knob {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 40px;
+            height: 18px;
+            border-radius: 9px;
+            background-color: #F44336;
+            transition: left 0.3s, background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5px;          /* очень маленький текст */
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;   /* сжатие */
+            line-height: 1;
+            overflow: hidden;         /* гарантирует, что текст не вылезет */
+            white-space: nowrap;
+            z-index: 2;
+            user-select: none;
+        }
+        .knob-on { display: none; }
+        .knob-off { display: block; }
+
+        input:checked ~ .switch-knob {
+            left: 29px;
+            background-color: #4CAF50;
+        }
+        input:checked ~ .switch-knob .knob-on { display: block; }
+        input:checked ~ .switch-knob .knob-off { display: none; }
+
+        /* Кнопка "Изменить" */
+        .start-btn {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 40px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s;
+        }
+        .start-btn:hover {
+            background: #45a049;
         }
     </style>
 </head>
-
 <body>
     <div class="app-container">
 
-        <!-- Бургер-кнопка (без фона, только значок) -->
-        <div class="burger-btn" id="burgerBtn">☰</div>
+        <!-- Бургер -->
+        <div class="burger-btn" id="burgerBtn">
+            <span></span><span></span><span></span>
+        </div>
 
-        <!-- Боковая панель настроек -->
+        <!-- Боковая панель -->
         <div class="side-panel" id="sidePanel">
             <button class="close-btn" id="closePanelBtn">&times;</button>
-
             <div class="panel-title">Подключения</div>
-
             <div class="toggle-container">
                 <span class="toggle-label">Wi-Fi</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="wifiToggle">
-                    <span class="slider"></span>
+                    <input type="checkbox" id="wifiToggle"><span class="slider"></span>
                 </label>
             </div>
-
             <div class="toggle-container">
                 <span class="toggle-label">Bluetooth</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="btToggle">
-                    <span class="slider"></span>
+                    <input type="checkbox" id="btToggle"><span class="slider"></span>
                 </label>
             </div>
-
             <div class="divider"></div>
-
             <div class="panel-title">Уведомления</div>
             <div class="notification-area" id="notificationArea">
                 <p>Нет новых уведомлений</p>
             </div>
         </div>
 
-        <!-- Область контента (вкладки) -->
+        <!-- Область контента -->
         <div class="content-area">
-            <!-- Главная (с фотографией/схемой теплицы) -->
+            <!-- Главная -->
             <div id="tab-home" class="tab-content active">
-                <div class="scene">
-                    <!-- Здесь потом расставим горячие точки -->
+                <div class="scene"></div>
+                <div class="control-buttons">
+                    <div class="ctrl-btn" id="playBtn"><img src="icons/play.png" alt="Play"></div>
+                    <div class="ctrl-btn" id="pauseBtn"><img src="icons/pause.png" alt="Pause"></div>
+                    <div class="ctrl-btn" id="warningBtn"><img src="icons/warning.svg" alt="Warning"></div>
                 </div>
             </div>
 
             <!-- Аэропоника -->
             <div id="tab-aeroponics" class="tab-content">
-                <div style="padding: 20px; color: #333;">
-                    <h3>Аэропоника</h3>
-                    <p>Управление аэропонной системой.</p>
+                <div class="aero-scene">
+                    <div class="aero-title">Аэропоника</div>
+                    <div class="section-divider"></div>
+                    <img class="aero-bg" src="images/aero-bg.svg" alt="bg">
+                    
+                    <div class="aero-inputs">
+                        <div class="aero-row">
+                            <span>Основной насос</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="pumpMainAero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Клапан 1</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="valve1Aero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Клапан 2</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="valve2Aero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Клапан 3</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="valve3Aero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Ультрафиолет</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="uvAero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Компрессор</span>
+                            <input type="number" class="aero-input" placeholder="0" min="0" id="compressorAero">
+                        </div>
+                        <div class="aero-row">
+                            <span>Освещение</span>
+                            <div class="light-block">
+                                <button id="lightToggleBtnAero" class="light-on">вкл</button>
+                                <input type="text" placeholder="00:00" value="00:00" pattern="[0-5][0-9]:[0-5][0-9]" maxlength="5" id="lightTimeAero">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="launch-counter">
+                        <div class="launch-icon">
+                            <img src="icons/cycle.svg" alt="cycle">
+                        </div>
+                        <span class="launch-label">Кол-во запусков:</span>
+                        <input type="number" class="launch-value" id="launchCountAero" value="0" min="0" max="24">
+                    </div>
                 </div>
             </div>
 
             <!-- Гидропоника -->
             <div id="tab-hydroponics" class="tab-content">
-                <div style="padding: 20px; color: #333;">
-                    <h3>Гидропоника</h3>
-                    <p>Управление гидропонной системой.</p>
+                <div class="hydro-scene">
+                    <div class="hydro-title">Гидропоника</div>
+                    <div class="section-divider"></div>
+                    <img class="hydro-bg" src="images/hydro-bg.svg" alt="bg">
+                    
+                    <div class="hydro-inputs">
+                        <div class="hydro-row">
+                            <span>Основной насос</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="pumpMainHydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Клапан 1</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="valve1Hydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Клапан 2</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="valve2Hydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Клапан 3</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="valve3Hydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Ультрафиолет</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="uvHydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Компрессор</span>
+                            <input type="number" class="hydro-input" placeholder="0" min="0" id="compressorHydro">
+                        </div>
+                        <div class="hydro-row">
+                            <span>Освещение</span>
+                            <div class="light-block">
+                                <button id="lightToggleBtnHydro" class="light-on">вкл</button>
+                                <input type="text" placeholder="00:00" value="00:00" pattern="[0-5][0-9]:[0-5][0-9]" maxlength="5" id="lightTimeHydro">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="launch-counter">
+                        <div class="launch-icon">
+                            <img src="icons/cycle.svg" alt="cycle">
+                        </div>
+                        <span class="launch-label">Кол-во обработок:</span>
+                        <input type="number" class="launch-value" id="launchCountHydro" value="0" min="0" max="24">
+                    </div>
                 </div>
             </div>
 
-            <!-- Датчики -->
-            <div id="tab-sensors" class="tab-content">
-                <div style="padding: 20px; color: #333;">
-                    <h3>Датчики</h3>
-                    <p>Показания всех датчиков.</p>
+            <!-- Система -->
+            <div id="tab-system" class="tab-content">
+                <div class="system-scene">
+                    <div class="system-header">
+                        <span class="system-title">Состояние системы</span>
+                    </div>
+                    <div class="section-divider" style="top: 46px;"></div>
+                    <div class="system-status">
+                        <span class="status-indicator" id="systemActiveIndicator"></span>
+                        <span class="status-text">Система активна</span>
+                    </div>
+                    <div class="active-system" id="activeSystemName">Аэропоника</div>
+
+                    <div class="sensor-oval">
+                        <div class="sensor-item">
+                            <img src="icons/temp.svg" alt="temp">
+                            <span>Температура:</span>
+                            <span id="tempValue">22°C</span>
+                        </div>
+                        <div class="sensor-item">
+                            <img src="icons/humidity.svg" alt="humidity">
+                            <span>Влажность:</span>
+                            <span id="humidityValue">55%</span>
+                        </div>
+                    </div>
+
+                    <div class="square-boxes">
+                        <div class="square-box" id="airBox">
+                            <div class="box-header">
+                                <img src="icons/air.svg" alt="air">
+                                <span>Воздух</span>
+                            </div>
+                            <div class="box-fields">
+                                <div class="field"><label>t:</label><input type="text" id="airT"></div>
+                                <div class="field"><label>p:</label><input type="text" id="airP"></div>
+                                <div class="field"><label>CO₂:</label><input type="text" id="airCO2"></div>
+                                <div class="field"><label>E:</label><input type="text" id="airE"></div>
+                            </div>
+                        </div>
+                        <div class="square-box" id="solutionBox">
+                            <div class="box-header">
+                                <img src="icons/solution.svg" alt="solution">
+                                <span>Раствор</span>
+                            </div>
+                            <div class="box-fields">
+                                <div class="field"><label>t:</label><input type="text" id="solT"></div>
+                                <div class="field"><label>pH:</label><input type="text" id="solPh"></div>
+                                <div class="field"><label>TDS:</label><input type="text" id="solTds"></div>
+                                <div class="field"><label>YB:</label><input type="text" id="solYb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="indicators-row">
+                        <div class="indicator-circle" id="ind1">1</div>
+                        <div class="indicator-circle" id="ind2">2</div>
+                        <div class="indicator-circle" id="ind3">3</div>
+                        <div class="indicator-square" id="ind4">4</div>
+                    </div>
+
+                    <div class="recovery-box">
+                        <div class="recovery-icon">
+                            <img src="icons/recovery.svg" alt="recovery">
+                        </div>
+                        <div class="recovery-text">
+                            <p>12:47 — Восстановление подачи</p>
+                            <p class="dim">12:45 — Насос отключен</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Управление -->
             <div id="tab-control" class="tab-content">
-                <div style="padding: 20px; color: #333;">
-                    <h3>Управление</h3>
-                    <p>Ручное управление системами.</p>
+                <div class="control-scene">
+                    <div class="control-title">Управление</div>
+                    <div class="section-divider"></div>
+                    <img class="control-bg" src="images/control-bg.svg" alt="bg">
+                    
+                    <div class="control-inputs">
+                        <div class="control-row">
+                            <span>Основной насос</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlPumpMain">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Клапан 1</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlValve1">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Клапан 2</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlValve2">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Клапан 3</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlValve3">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Ультрафиолет</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlUv">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Компрессор</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlCompressor">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="control-row">
+                            <span>Освещение</span>
+                            <label class="switch">
+                                <input type="checkbox" id="ctrlLight">
+                                <span class="switch-slider"></span>
+                                <span class="switch-knob">
+                                    <span class="knob-on">вкл</span>
+                                    <span class="knob-off">выкл</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="start-btn" id="startBtn">Изменить</div>
                 </div>
             </div>
         </div>
 
-        <!-- Три кнопки управления -->
-        <div class="control-buttons">
-            <div class="ctrl-btn" id="playBtn"><img src="icons/play.png" alt="Play"></div>
-            <div class="ctrl-btn" id="pauseBtn"><img src="icons/pause.png" alt="Pause"></div>
-            <div class="ctrl-btn" id="warningBtn"><img src="icons/warning.png" alt="Warning"></div>
-        </div>
-
-        <!-- Нижняя панель навигации (5 кнопок) -->
+        <!-- Нижняя панель (5 кнопок) -->
         <div class="bottom-nav">
-            <div class="nav-btn active" data-tab="home">
-                <img src="icons/home.svg" alt="Главная"><span>Главная</span>
-            </div>
-            <div class="nav-btn" data-tab="aeroponics">
-                <img src="icons/aeroponics.svg" alt="Аэропоника"><span>Аэропоника</span>
-            </div>
-            <div class="nav-btn" data-tab="hydroponics">
-                <img src="icons/hydroponics.svg" alt="Гидропоника"><span>Гидропоника</span>
-            </div>
-            <div class="nav-btn" data-tab="sensors">
-                <img src="icons/sensors.svg" alt="Датчики"><span>Датчики</span>
-            </div>
-            <div class="nav-btn" data-tab="control">
-                <img src="icons/control.svg" alt="Управление"><span>Управление</span>
-            </div>
+            <div class="nav-btn active" data-tab="home"><img src="icons/home.svg" alt="Главная"><span>Главная</span></div>
+            <div class="nav-btn" data-tab="aeroponics"><img src="icons/aeroponics.svg" alt="Аэропоника"><span>Аэропоника</span></div>
+            <div class="nav-btn" data-tab="hydroponics"><img src="icons/hydroponics.svg" alt="Гидропоника"><span>Гидропоника</span></div>
+            <div class="nav-btn" data-tab="system"><img src="icons/sensors.svg" alt="Система"><span>Система</span></div>
+            <div class="nav-btn" data-tab="control"><img src="icons/control.svg" alt="Управление"><span>Управление</span></div>
         </div>
     </div>
 
-    <!-- Временный JavaScript для переключения вкладок и бургера -->
     <script>
-        (function () {
+        (function() {
+            // Переключение вкладок
             var navButtons = document.querySelectorAll('.nav-btn');
             var tabs = document.querySelectorAll('.tab-content');
-
-            navButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    navButtons.forEach(function (b) { b.classList.remove('active'); });
-                    tabs.forEach(function (t) { t.classList.remove('active'); });
-
-                    var targetId = this.getAttribute('data-tab');
-                    var targetTab = document.getElementById('tab-' + targetId);
-                    if (targetTab) {
-                        targetTab.classList.add('active');
-                        this.classList.add('active');
-                    }
+            navButtons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    navButtons.forEach(function(b) { b.classList.remove('active'); });
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    var target = document.getElementById('tab-' + this.getAttribute('data-tab'));
+                    if (target) { target.classList.add('active'); this.classList.add('active'); }
                 });
             });
 
-            var burgerBtn = document.getElementById('burgerBtn');
-            var sidePanel = document.getElementById('sidePanel');
-            var closePanelBtn = document.getElementById('closePanelBtn');
-
-            burgerBtn.addEventListener('click', function () { sidePanel.classList.add('open'); });
-            closePanelBtn.addEventListener('click', function () { sidePanel.classList.remove('open'); });
-            document.addEventListener('click', function (e) {
-                if (!sidePanel.contains(e.target) && e.target !== burgerBtn) {
-                    sidePanel.classList.remove('open');
-                }
+            // Бургер
+            var burger = document.getElementById('burgerBtn');
+            var side = document.getElementById('sidePanel');
+            var close = document.getElementById('closePanelBtn');
+            burger.addEventListener('click', function() { side.classList.add('open'); });
+            close.addEventListener('click', function() { side.classList.remove('open'); });
+            document.addEventListener('click', function(e) {
+                if (!side.contains(e.target) && e.target !== burger) side.classList.remove('open');
             });
+
+            // Warning меняет иконку
+            var warnBtn = document.getElementById('warningBtn');
+            if (warnBtn) {
+                var warnImg = warnBtn.querySelector('img');
+                warnBtn.addEventListener('click', function() {
+                    warnImg.src = warnImg.src.includes('warning.svg') ? 'icons/flask.svg' : 'icons/warning.svg';
+                });
+            }
+
+            // Освещение на Аэропонике
+            var lightBtnAero = document.getElementById('lightToggleBtnAero');
+            if (lightBtnAero) {
+                lightBtnAero.addEventListener('click', function() {
+                    if (this.classList.contains('light-on')) {
+                        this.classList.remove('light-on');
+                        this.classList.add('light-off');
+                        this.textContent = 'выкл';
+                    } else {
+                        this.classList.remove('light-off');
+                        this.classList.add('light-on');
+                        this.textContent = 'вкл';
+                    }
+                });
+            }
+
+            // Освещение на Гидропонике
+            var lightBtnHydro = document.getElementById('lightToggleBtnHydro');
+            if (lightBtnHydro) {
+                lightBtnHydro.addEventListener('click', function() {
+                    if (this.classList.contains('light-on')) {
+                        this.classList.remove('light-on');
+                        this.classList.add('light-off');
+                        this.textContent = 'выкл';
+                    } else {
+                        this.classList.remove('light-off');
+                        this.classList.add('light-on');
+                        this.textContent = 'вкл';
+                    }
+                });
+            }
         })();
     </script>
 </body>
-
 </html>
